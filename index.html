@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>煦生工作室 - 用科技延续情感记忆</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #d4a798; /* 柔和的桃红色 */
+            --secondary: #f9e8d9; /* 温暖的米黄色 */
+            --accent: #e7c8b4; /* 浅陶土色 */
+            --light: #fff9f5; /* 极浅的粉白色 */
+            --dark: #8b6d5b; /* 深褐色 */
+            --text: #5a4e45; /* 深棕灰色 */
+            --highlight: #e8a798; /* 强调色 */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            color: var(--text);
+            background-color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 动态背景元素 */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            top: 70%;
+            left: 80%;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            top: 40%;
+            left: 75%;
+            animation-delay: -10s;
+            animation-duration: 18s;
+        }
+        
+        .floating-element:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, var(--highlight) 0%, transparent 70%);
+            top: 80%;
+            left: 15%;
+            animation-delay: -7s;
+            animation-duration: 22s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            50% {
+                transform: translateY(10px) rotate(-5deg);
+            }
+            75% {
+                transform: translateY(-10px) rotate(3deg);
+            }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+        
+        /* 导航栏样式 - 增加动画效果 */
+        header {
+            background-color: rgba(255, 249, 245, 0.95);
+            box-shadow: 0 2px 15px rgba(139, 109, 91, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(139, 109, 91, 0.1);
+            padding: 0 30px;
+            transition: all 0.4s ease;
+        }
+        
+        header.scrolled {
+            padding: 0 20px;
+            background-color: rgba(255, 249, 245, 0.98);
+            box-shadow: 0 5px 20px rgba(139, 109, 91, 0.15);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            transition: all 0.4s ease;
+        }
+        
+        header.scrolled nav {
+            padding: 10px 0;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--primary);
+            animation: heartbeat 2s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 35px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 首页样式 - 使用动态渐变背景 */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #f9e8d9, #e7c8b4, #f9e8d9);
+            background-size: 200% 200%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--dark);
+            padding-top: 70px;
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.2) 0%, transparent 15%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.2) 0%, transparent 15%),
+                radial-gradient(circle at 40% 60%, rgba(255,255,255,0.2) 0%, transparent 10%);
+            animation: floatBackground 20s infinite ease-in-out;
+        }
+        
+        @keyframes floatBackground {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+        
+        .hero-content {
+            width: 90%;
+            max-width: 1400px;
+            position: relative;
+            z-index: 2;
+            padding: 50px;
+            background-color: rgba(255, 249, 245, 0.85);
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 167, 152, 0.2);
+            box-shadow: 0 15px 40px rgba(139, 109, 91, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 1s ease;
+        }
+        
+        .hero-content.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 35px;
+            color: var(--text);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(212, 167, 152, 0.4);
+            position: relative;
+            overflow: hidden;
+            max-width: 400px;
+            white-space: nowrap;
+            transform: translateY(0);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(139, 109, 91, 0.4);
+        }
+        
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .hero-feature {
+            background: rgba(212, 167, 152, 0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            min-width: 160px;
+            transition: all 0.4s ease;
+            transform: translateY(0);
+        }
+        
+        .hero-feature:hover {
+            transform: translateY(-10px);
+            background: rgba(212, 167, 152, 0.3);
+            box-shadow: 0 10px 25px rgba(139, 109, 91, 0.15);
+        }
+        
+        .hero-feature i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            transition: all 0.4s ease;
+        }
+        
+        .hero-feature:hover i {
+            transform: scale(1.2);
+        }
+        
+        .hero-feature p {
+            font-size: 1.1rem;
+        }
+        
+        /* 内容区块样式 */
+        .section {
+            padding: 90px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.6rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        
+        /* 特别为"关于我们"标题增加字间距 */
+        #about .section-title {
+            letter-spacing: 0.15em;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 60px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease 0.2s;
+        }
+        
+        .section-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 产品介绍部分 */
+        .product-intro {
+            background: linear-gradient(to bottom, var(--light), var(--secondary));
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 60px;
+        }
+        
+        .product-intro::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M40,100 C50,80 70,60 100,60 C130,60 150,80 160,100 L160,180 L40,180 Z" fill="%23fff9f5" opacity="0.2"/></svg>');
+            background-size: 300px;
+            opacity: 0.5;
+            animation: floatBackground 25s infinite ease-in-out;
+        }
+        
+        .product-desc {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            text-align: center;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(212, 167, 152, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .product-desc.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 70px;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 320px;
+            margin: 20px;
+            padding: 35px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(212, 167, 152, 0.1);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(139, 109, 91, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .feature.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(139, 109, 91, 0.1);
+            background-color: white;
+        }
+        
+        .feature i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            background-color: rgba(212, 167, 152, 0.1);
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+        
+        .feature:hover i {
+            transform: rotate(10deg) scale(1.1);
+            background-color: rgba(212, 167, 152, 0.2);
+        }
+        
+        .feature h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .feature p {
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+        
+        .video-showcase {
+            margin-top: 50px;
+            width: 100%;
+        }
+        
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 30px auto;
+            justify-content: center;
+            max-width: 100%;
+        }
+        
+        .video-item {
+            flex: 1;
+            min-width: 320px;
+            max-width: 1200px;
+            width: 90%;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(139, 109, 91, 0.15);
+            transition: transform 0.4s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .video-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .video-item:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 50px rgba(139, 109, 91, 0.2);
+        }
+        
+        .preview-container {
+            width: 100%;
+            aspect-ratio: 1/0.5268;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background: linear-gradient(45deg, var(--primary), var(--highlight));
+            transition: all 0.4s ease;
+        }
+        
+        .video-item:hover .preview-container {
+            background: linear-gradient(45deg, #d18e7c, #e0998a);
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .video-player::after {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 6px;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+        }
+        
+        .preview-container img, .preview-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+			background-color: #000;
+        }
+        
+        .preview-label {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: 500;
+            padding: 0 20px;
+        }
+        
+        .upload-btn {
+            margin: 20px 0 25px;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(212, 167, 152, 0.4);
+            min-width: 200px;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(139, 109, 91, 0.4);
+        }
+        
+        .upload-instruction {
+            font-size: 1rem;
+            color: white;
+            margin-top: 15px;
+            text-align: center;
+            padding: 0 30px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+        
+        .upload-instruction.hidden {
+            display: none;
+        }
+        
+        /* 制作流程部分 */
+        .process {
+            background: linear-gradient(to bottom, var(--secondary), var(--light));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .process::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M100,40 C120,50 140,70 140,100 C140,130 120,150 100,160 C80,150 60,130 60,100 C60,70 80,50 100,40 Z" fill="%23f9e8d9" opacity="0.3"/></svg>');
+            background-size: 400px;
+            opacity: 0.3;
+            animation: floatBackground 30s infinite ease-in-out;
+        }
+        
+        .process-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 50px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step {
+            width: 220px;
+            text-align: center;
+            margin: 0 20px 40px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .step::before {
+            content: "";
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 70px;
+            border-left: 2px dashed var(--primary);
+            opacity: 0.5;
+            z-index: 1;
+            transition: all 1s ease;
+        }
+        
+        .step.visible::before {
+            height: 70px;
+        }
+        
+        .step:last-child::before {
+            display: none;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 25px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(212, 167, 152, 0.3);
+            transition: all 0.4s ease;
+        }
+        
+        .step:hover .step-number {
+            transform: scale(1.1);
+            background-color: var(--dark);
+            box-shadow: 0 8px 20px rgba(212, 167, 152, 0.4);
+        }
+        
+        .step-content {
+            background-color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(139, 109, 91, 0.05);
+            border: 1px solid rgba(212, 167, 152, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .step-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(139, 109, 91, 0.1);
+        }
+        
+        .step h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.4rem;
+        }
+        
+        .step p {
+            font-size: 1rem;
+            color: var(--text);
+        }
+        
+        /* 价格方案部分 - 左右布局 */
+        .pricing {
+            background: linear-gradient(to bottom, var(--light), var(--secondary));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="10" fill="%23f9e8d9" opacity="0.1" stroke="%23d4a798" stroke-width="0.5" stroke-opacity="0.1"/></svg>');
+            background-size: 200px;
+            opacity: 0.3;
+            animation: floatBackground 25s infinite ease-in-out;
+        }
+        
+        .pricing-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            position: relative;
+            z-index: 2;
+            gap: 40px;
+        }
+        
+        .pricing-plan {
+            flex: 1;
+            padding: 45px 35px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 5px 15px rgba(139, 109, 91, 0.05);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(212, 167, 152, 0.1);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .pricing-plan.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .pricing-plan:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(139, 109, 91, 0.1);
+            background-color: white;
+        }
+        
+        .pricing-plan h3 {
+            font-size: 1.9rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-weight: 700;
+            transition: all 0.4s ease;
+        }
+        
+        .pricing-plan:hover .price {
+            color: var(--dark);
+            transform: scale(1.1);
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 35px;
+            text-align: left;
+            flex-grow: 1;
+        }
+        
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-features li:hover {
+            transform: translateX(5px);
+            color: var(--primary);
+        }
+        
+        .plan-features li:before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: 5px;
+            top: 12px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .pricing-plan .btn-container {
+            margin-top: auto;
+            text-align: center;
+        }
+        
+        /* 关于我们部分 */
+        .about {
+            background: linear-gradient(to bottom, var(--secondary), var(--light));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .about-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            margin: 20px 35px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 25px 35px;
+            border-radius: 15px;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(139, 109, 91, 0.05);
+            border: 1px solid rgba(212, 167, 152, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .stat-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            background-color: white;
+            box-shadow: 0 10px 25px rgba(139, 109, 91, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            transition: all 0.4s ease;
+        }
+        
+        .stat-item:hover .stat-number {
+            transform: scale(1.2);
+            color: var(--dark);
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin: 50px auto;
+            padding: 35px;
+            border-left: 4px solid var(--primary);
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 0 15px 15px 0;
+            position: relative;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        
+        .quote.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .quote:hover {
+            transform: translateX(5px);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .quote::before {
+            content: """;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.1;
+            font-family: serif;
+        }
+        
+        /* 联系我们部分 - 修改为新的样式 */
+        .testimonials {
+            background: linear-gradient(to bottom, var(--light), var(--secondary));
+            position: relative;
+            overflow: hidden;
+            padding: 90px 0;
+        }
+        
+        .testimonials-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .testimonials-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .testimonials-header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        
+        .testimonials-section {
+            padding: 0 40px;
+        }
+        
+        .testimonial-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 40px;
+            padding-bottom: 30px;
+        }
+        
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .contact-method {
+            width: 320px;
+            margin: 20px;
+            padding: 35px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(139, 109, 91, 0.05);
+            border: 1px solid rgba(212, 167, 152, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .contact-method.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .contact-method:hover {
+            transform: translateY(-10px) scale(1.05);
+            background-color: white;
+            box-shadow: 0 15px 30px rgba(139, 109, 91, 0.1);
+        }
+        
+        .contact-method i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            background-color: rgba(212, 167, 152, 0.1);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+        
+        .contact-method:hover i {
+            transform: rotate(15deg) scale(1.1);
+            background-color: rgba(212, 167, 152, 0.2);
+        }
+        
+        .contact-method h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+        
+        .contact-method p {
+            color: var(--text);
+            font-size: 1.2rem;
+        }
+        
+        /* 联系我们部分 */
+        .contact {
+            background: linear-gradient(to bottom, var(--secondary), var(--light));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="50" cy="50" r="10" fill="%23d4a798" opacity="0.1"/><circle cx="150" cy="100" r="15" fill="%23d4a798" opacity="0.1"/><circle cx="80" cy="180" r="8" fill="%23d4a798" opacity="0.1"/></svg>');
+            background-size: 300px;
+            opacity: 0.3;
+            animation: floatBackground 20s infinite ease-in-out;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: var(--dark);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 70px 0 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .footer-logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .footer-logo i {
+            margin-right: 12px;
+            color: var(--accent);
+            font-size: 1.3em;
+            animation: heartbeat 2s infinite;
+        }
+        
+        .footer-slogan {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .copyright {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 25px;
+            }
+            
+            .nav-links li {
+                margin-left: 25px;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2.3rem;
+            }
+            
+            .pricing-container {
+                flex-direction: column;
+            }
+            
+            .video-item {
+                width: 95%;
+                max-width: 1000px;
+            }
+            
+            .preview-container {
+                aspect-ratio: 1/0.5268;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .hero-features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .features {
+                flex-direction: column;
+            }
+            
+            .video-item {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .step::before {
+                display: none;
+            }
+            
+            .preview-container {
+                aspect-ratio: 1/0.5268;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .testimonial-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .contact-methods {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .preview-container {
+                aspect-ratio: 1/0.5268;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 30px;
+                width: 95%;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 70px 0;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .feature, .pricing-plan {
+                min-width: 100%;
+                margin: 15px 0;
+            }
+            
+            .testimonials-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .testimonials-header p {
+                font-size: 1.1rem;
+            }
+            
+            .testimonials-section {
+                padding: 0 20px;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .preview-container {
+                height: 300px;
+            }
+            
+            .video-player::after {
+                font-size: 0.9rem;
+                bottom: 10px;
+                right: 10px;
+                padding: 3px 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .preview-container {
+                height: 250px;
+            }
+            
+            .upload-btn {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+            
+            .video-player {
+                font-size: 2.5rem;
+            }
+            
+            .video-player::after {
+                font-size: 0.8rem;
+                bottom: 5px;
+                right: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 动态背景元素 -->
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo"><i class="fas fa-heart"></i>煦生工作室</a>
+                <ul class="nav-links">
+                    <li><a href="#product">产品介绍</a></li>
+                    <li><a href="#process">制作流程</a></li>
+                    <li><a href="#pricing">价格方案</a></li>
+                    <li><a href="#about">关于我们</a></li>
+                    <li><a href="#testimonials">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首页 - 使用动态渐变背景 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>让爱永不消逝，用科技延续永恒的情感记忆</h1>
+            <p>我们帮助您将珍贵的静态回忆转化为生动的动态叙事，在虚拟与现实交融中延续与亲人之间的情感联结。</p>
+            <a href="#product" class="btn">开启记忆重现之旅</a>
+            
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-video"></i>
+                    <p>AI动态修复</p>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-microphone-alt"></i>
+                    <p>声音还原</p>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-heart"></i>
+                    <p>情感传承</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品介绍 -->
+    <section id="product" class="section product-intro">
+        <div class="container">
+            <h2 class="section-title">重新遇见，永远铭记</h2>
+            <p class="section-subtitle">我们理解失去亲人的痛苦，也明白那些未能说出口的话有多么珍贵。基于多模态大模型技术，我们将静态回忆转化为动态叙事，打造"数字生命载体"视频，让您能够再次看到亲人的笑容，听到他们的声音。</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-magic"></i>
+                    <h3>动态还原技术</h3>
+                    <p>对老照片/视频进行AI修复，精准还原面部微表情（如微笑、凝视）、肢体动作细节，消除传统影像的僵硬感，让记忆中的亲人"活"过来。</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-theater-masks"></i>
+                    <h3>多场景神态模拟</h3>
+                    <p>根据您的描述，定制亲人在特定情境下的神态（如读书时的专注、婚礼中的欣慰），实现"记忆场景复活"，创造您一直想要的互动瞬间。</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-user-check"></i>
+                    <h3>轻量化创作</h3>
+                    <p>您仅需提供一些照片+录音/视频，我们的专业团队就能帮您生成高清追思影片，让技术复杂的工作变得简单易行。</p>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-award"></i>
+                    <h3>质量保证</h3>
+                    <p>专业团队精心制作，每一帧画面都饱含情感与温度，成品经过三重质检流程，确保每一个细节都完美呈现。</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-tag"></i>
+                    <h3>透明定价</h3>
+                    <p>我们提供多种价格方案，满足不同用户需求，性价比高，无任何隐藏费用，让您安心选择最适合的服务。</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-lock"></i>
+                    <h3>隐私保护</h3>
+                    <p>我们深知这些记忆的私密性，严格保密客户资料，所有数据在交付后彻底删除，并签订隐私保护协议，让您无后顾之忧。</p>
+                </div>
+            </div>
+            
+            <div class="video-showcase">
+                <h2 class="section-title">亲眼见证改变</h2>
+                <p class="section-subtitle">观看下面的示例，了解我们如何将静态照片转化为生动的记忆</p>
+                
+                <div class="video-item">
+                    <div class="preview-container" id="videoPreview">
+                        <div class="video-player">
+                            <video 
+                                id="videoDisplay"
+                                controls 
+                                width="100%"
+                                preload="none"
+                                style="display: block;"
+                                poster="cover.jpg"								
+                            >
+                                <source src="video.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放，请更新Chrome/Edge/Firefox浏览器。
+                            </video>
+                        </div>
+                    </div>
+                    <div class="preview-label">视频修复示例</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 制作流程 -->
+    <section id="process" class="section process">
+        <div class="container">
+            <h2 class="section-title">我们的用心制作流程</h2>
+            <p class="section-subtitle">我们深知这些记忆对您的重要性，因此我们遵循一套细致入微的流程，确保每个步骤都能以最高的质量和情感投入来完成。</p>
+            
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>情感需求沟通</h3>
+                        <p>我们与您进行深入的情感沟通，了解您与亲人的故事，捕捉那些珍贵的细节和情感节点，为后续制作奠定基础。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>个性化方案设计</h3>
+                        <p>基于您的故事和需求，我们的设计团队创建个性化的方案，确保最终作品能够真实还原您记忆中的场景和情感。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>技术实现与情感注入</h3>
+                        <p>我们的技术团队运用先进的AI技术，同时注入情感元素，确保不只是技术还原，更是情感的再现。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>细节优化与情感校准</h3>
+                        <p>我们将初步成品与您分享，根据您的反馈进行细节优化和情感校准，确保每一个表情、每一个动作都符合您的记忆。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>完美交付与持续支持</h3>
+                        <p>最终成品以高品质格式交付，并提供后续的情感支持服务，确保这段数字记忆能够长久陪伴您。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 价格方案 - 左右布局 -->
+    <section id="pricing" class="section pricing">
+        <div class="container">
+            <h2 class="section-title">选择适合您的情感传承方式</h2>
+            <p class="section-subtitle">我们根据过往用户的真实需求，设计了两种不同层次的方案，以满足您不同的情感表达需求</p>
+            
+            <div class="pricing-container">
+                <div class="pricing-plan">
+                    <h3>"未说完的话"基础版</h3>
+                    <div class="price">¥200</div>
+                    <ul class="plan-features">
+                        <li>帮助您表达那些未能说出口的情感</li>
+                        <li>基础视频制作服务</li>
+                        <li>3分钟以内的亲人讲话视频</li>
+                        <li>标准画质保证</li>
+                        <li>最多5张珍贵照片</li>
+                        <li>精选背景音乐搭配</li>
+                        <li>3个工作日内交付</li>
+                        <li>一次修改机会</li>
+                    </ul>
+                    <div class="btn-container">
+                        <a href="#contact" class="btn">选择此方案</a>
+                    </div>
+                </div>
+                
+                <div class="pricing-plan">
+                    <h3>"完整的爱"珍藏版</h3>
+                    <div class="price">¥4000</div>
+                    <ul class="plan-features">
+                        <li>完整呈现您想表达的所有情感</li>
+                        <li>帮助亲人"讲述"他们的故事</li>
+                        <li>打造亲人一生的回顾与纪念</li>
+                        <li>高清视频制作</li>
+                        <li>10-15分钟的完整叙事（以实际为准）</li>
+                        <li>数张珍贵照片</li>
+                        <li>专属定制背景音乐</li>
+                        <li>多场景多情境设计</li>
+                        <li>三次小修改完善机会</li>
+                        <li>一周内精心制作交付</li>
+                    </ul>
+                    <div class="btn-container">
+                        <a href="#contact" class="btn">选择此方案</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about" class="section about">
+        <div class="container">
+            <h2 class="section-title">关于我们</h2>
+            
+            <div class="about-content">
+                <p>至今，我们已经陪伴了1000多个家庭，帮助他们完成未能说出口的情感表达，延续与亲人之间的情感联结。每一位用户的故事都深深触动着我们，他们的反馈和建议也帮助我们不断成长，让我们能够以更完善的服务完成每一个珍贵的心愿。</p>
+                
+                <p>我们不仅仅是一个技术团队，更是一群懂得珍惜和怀念的人。我们相信，科技的意义不在于取代人类情感，而在于帮助人们更好地表达和保存那些珍贵的情感记忆。</p>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">已服务家庭</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-number">98.7%</div>
+                        <div class="stat-label">客户满意度</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">专业团队成员</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-number">1200+</div>
+                        <div class="stat-label">已完成项目</div>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    "科技终将老去，但人类的情感永远鲜活。我们不用数据复刻生命，而是用算法雕刻思念的形状——当孙女在婚礼上'看见'外婆微笑鼓掌的瞬间，这便是时空留声机的意义。"
+                    <p style="text-align: right; margin-top: 15px;">—— 煦生工作室创始人</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 - 修改为新的样式 -->
+    <section id="testimonials" class="section testimonials">
+        <div class="testimonials-header">
+            <h1>联系我们</h1>
+            <p>无论何时，我们都愿意倾听您的故事，为您守护每一份珍贵的情感记忆</p>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title">让我们为您守护珍贵记忆</h2>
+            <p class="section-subtitle">如果您有任何疑问或需要进一步了解我们的服务，请通过以下方式与我们取得联系</p>
+            
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <i class="fas fa-phone"></i>
+                    <h3>电话咨询</h3>
+                    <p>18040137951</p>
+                    <p>周一至周日 9:00-21:00</p>
+                </div>
+                
+                <div class="contact-method">
+                    <i class="fab fa-weixin"></i>
+                    <h3>微信联系</h3>
+                    <p>wza282</p>
+                    <p>添加好友请备注"记忆修复"</p>
+                </div>
+                
+                <div class="contact-method">
+                    <i class="fas fa-envelope"></i>
+                    <h3>邮箱沟通</h3>
+                    <p>2935746282@qq.com</p>
+                    <p>我们会在24小时内回复</p>
+                </div>
+            </div>
+
+            <div class="product-desc" style="margin-top: 50px;">
+                <h3>不确定如何开始？</h3>
+                <p>我们的顾问可以为您提供免费咨询，帮助您确定最适合的情感表达方式。无论是几张老照片，还是一段模糊的视频，我们都能从中提取珍贵的元素，为您打造独一无二的数字记忆载体。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><i class="fas fa-heart"></i>煦生工作室</div>
+                <p class="footer-slogan">用科技延续情感记忆，让爱永不消逝</p>
+                
+                <div class="copyright">
+                    &copy; 2023 煦生工作室 版权所有 | 温暖记忆，永恒传承
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面滚动效果
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 70,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // 元素进入视口时的动画效果
+        function checkVisibility() {
+            const elements = document.querySelectorAll('.hero-content, .section-title, .section-subtitle, .product-desc, .feature, .video-item, .step, .pricing-plan, .about-content, .stat-item, .quote, .contact-method');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        
+        // 初始检查可见性
+        window.addEventListener('load', checkVisibility);
+        // 滚动时检查可见性
+        window.addEventListener('scroll', checkVisibility);
+        
+        // 视频上传功能
+        const videoUpload = document.getElementById('videoUpload');
+        const videoDisplay = document.getElementById('videoDisplay');
+        const videoPreview = document.getElementById('videoPreview');
+        
+        videoUpload.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                // 隐藏默认图标和文字
+                const videoPlayer = videoPreview.querySelector('.video-player');
+                videoPlayer.style.display = 'none';
+                
+                // 显示视频预览
+                videoDisplay.src = URL.createObjectURL(this.files[0]);
+                videoDisplay.style.display = 'block';
+                videoDisplay.controls = true;
+                
+                // 隐藏上传说明文字
+                const uploadInstruction = videoPlayer.querySelector('.upload-instruction');
+                if (uploadInstruction) {
+                    uploadInstruction.classList.add('hidden');
+                }
+            }
+        });
+        
+        // 拖放上传功能
+        function setupDragAndDrop(dropZone, inputElement, isImage = false) {
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.border = '3px dashed ' + 'var(--primary)';
+                this.style.backgroundColor = 'rgba(212, 167, 152, 0.15)';
+            });
+            
+            dropZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.border = 'none';
+                this.style.backgroundColor = '';
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.border = 'none';
+                this.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length) {
+                    inputElement.files = e.dataTransfer.files;
+                    
+                    // 触发change事件
+                    const event = new Event('change', { bubbles: true });
+                    inputElement.dispatchEvent(event);
+                }
+            });
+        }
+        
+        // 设置视频的拖放功能
+        setupDragAndDrop(videoPreview, videoUpload);
+        
+        // 点击预览区域触发文件选择
+        videoPreview.addEventListener('click', function() {
+            videoUpload.click();
+        });
+        
+        // 初始显示hero内容
+        setTimeout(function() {
+            document.querySelector('.hero-content').classList.add('visible');
+        }, 300);
+    </script>
+</body>
+</html>
